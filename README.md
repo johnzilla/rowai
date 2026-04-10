@@ -14,7 +14,14 @@ Voice-first AI rowing coach for Concept2 indoor rowers. Reads real-time PM5 data
 - Screen Wake Lock for session stability
 - BLE disconnect recovery with timer fallback mode
 
-**Phase 2: Coaching Loop** -- Up next
+**Phase 2: Coaching Loop** -- In progress (3/4 plans complete)
+
+- Coaching pipeline core (types, Zustand store, AudioQueue with priority interrupt, StrokeProcessor, CueRouter, cue templates)
+- Server API routes: Claude streaming proxy (`/api/coach`), Cartesia TTS proxy (`/api/tts`), session writer
+- Pre-session check-in screen (energy level, time available, session suggestion)
+- Mid-session tap controls ("Too Hard" / "Push Me" / "I'm Good")
+- Coaching indicator (pulsing bar when coach speaks)
+- Remaining: post-session debrief and session persistence (Plan 02-04)
 
 **Phase 3: Memory & History** -- Planned
 
@@ -24,6 +31,8 @@ Voice-first AI rowing coach for Concept2 indoor rowers. Reads real-time PM5 data
 - **PWA:** Serwist (service worker)
 - **Auth/DB:** Supabase (Postgres + Auth)
 - **BLE:** Web Bluetooth API (Chrome Android)
+- **Voice:** Cartesia Sonic (streaming TTS)
+- **AI:** Claude API (coaching responses, debrief)
 - **State:** Zustand
 - **Testing:** Vitest
 
@@ -35,6 +44,8 @@ Voice-first AI rowing coach for Concept2 indoor rowers. Reads real-time PM5 data
 - A Supabase project (for auth and database)
 - Chrome Android or Chrome desktop (for Web Bluetooth)
 - Concept2 PM5 rower (for BLE data)
+- Anthropic API key (for Claude coaching responses)
+- Cartesia API key + voice ID (for streaming TTS)
 
 ### Setup
 
@@ -42,11 +53,16 @@ Voice-first AI rowing coach for Concept2 indoor rowers. Reads real-time PM5 data
 # Install dependencies
 npm install
 
-# Copy env template and fill in your Supabase credentials
-cp .env.local.example .env.local
+# Add env vars to .env.local
+NEXT_PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+ANTHROPIC_API_KEY=sk-ant-...
+CARTESIA_API_KEY=...
+CARTESIA_VOICE_ID=...
 
-# Push database schema (requires Supabase CLI + linked project)
-supabase db push
+# Link Supabase and push schema
+npx supabase link --project-ref <ref>
+npx supabase db push
 
 # Run dev server
 npm run dev
@@ -68,16 +84,24 @@ npx tsc --noEmit
 src/
   app/
     (auth)/         # Login, signup pages
+    api/
+      coach/        # Claude streaming proxy (SSE) — 5 coaching intents
+      tts/          # Cartesia TTS streaming proxy (SSE)
+    checkin/        # Pre-session check-in (energy, time, session suggestion)
     onboarding/     # Name-only onboarding (D-04)
-    session/        # Main rowing session page
+    session/        # Main rowing session page + coaching controls
   components/
     ble/            # BleConnectButton (rationale + connect)
+    checkin/        # CheckinScreen, TapInputRow
+    coaching/       # CoachingIndicator, MidSessionControls
     metrics/        # MetricDisplay (split large, secondaries)
     session/        # SessionEndPrompt
   hooks/
-    useSessionLifecycle.ts  # Auto-start/end state machine
+    useCoachingSession.ts  # Wires StrokeProcessor → CueRouter → AudioQueue
+    useSessionLifecycle.ts # Auto-start/end state machine
   lib/
     ble/            # PM5 constants, parser (TDD), service
+    coaching/       # Types, store, AudioQueue, StrokeProcessor, CueRouter, cue templates, session writer
     session/        # Zustand session store
     supabase/       # Client, server, middleware helpers
     wake-lock/      # WakeLockManager
