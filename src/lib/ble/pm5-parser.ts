@@ -51,6 +51,9 @@ export function getUint24LE(data: DataView, offset: number): number {
 export function parseRowingGeneralStatus(
   data: DataView
 ): Pick<StrokeReading, 'elapsedTimeMs' | 'distanceMeters' | 'strokeState'> {
+  if (data.byteLength < 7) {
+    throw new RangeError(`ROWING_STATUS too short: ${data.byteLength} bytes (need 7)`);
+  }
   const elapsedTimeMs = getUint24LE(data, ROWING_STATUS_ELAPSED_TIME_OFFSET) * 10;
   const distanceMeters = getUint24LE(data, ROWING_STATUS_DISTANCE_OFFSET) / 10;
   const strokeState = data.getUint8(ROWING_STATUS_STROKE_STATE_OFFSET);
@@ -68,6 +71,9 @@ export function parseRowingGeneralStatus(
 export function parseExtraStatus1(
   data: DataView
 ): Pick<StrokeReading, 'strokeRate' | 'splitMs'> {
+  if (data.byteLength < 6) {
+    throw new RangeError(`EXTRA_STATUS1 too short: ${data.byteLength} bytes (need 6)`);
+  }
   const strokeRate = data.getUint8(EXTRA1_STROKE_RATE_OFFSET);
   const splitMs = getUint24LE(data, EXTRA1_SPLIT_OFFSET) * 10;
   return { strokeRate, splitMs };
@@ -81,6 +87,9 @@ export function parseExtraStatus1(
  *   offset 0: watts, 16-bit LE
  */
 export function parseExtraStatus2(data: DataView): Pick<StrokeReading, 'watts'> {
+  if (data.byteLength < 2) {
+    throw new RangeError(`EXTRA_STATUS2 too short: ${data.byteLength} bytes (need 2)`);
+  }
   const watts = data.getUint16(EXTRA2_WATTS_OFFSET, true); // true = little-endian
   return { watts };
 }

@@ -115,9 +115,13 @@ export class PM5Service extends EventTarget {
   private handleRowingStatus = (event: Event): void => {
     const characteristic = event.target as BluetoothRemoteGATTCharacteristic;
     if (!characteristic.value) return;
-    const parsed = parseRowingGeneralStatus(characteristic.value);
-    this.partialReading = { ...this.partialReading, ...parsed };
-    this.tryDispatchReading();
+    try {
+      const parsed = parseRowingGeneralStatus(characteristic.value);
+      this.partialReading = { ...this.partialReading, ...parsed };
+      this.tryDispatchReading();
+    } catch (err) {
+      console.warn('[PM5Service] Malformed ROWING_STATUS packet:', err);
+    }
   };
 
   /**
@@ -127,9 +131,13 @@ export class PM5Service extends EventTarget {
   private handleExtraStatus1 = (event: Event): void => {
     const characteristic = event.target as BluetoothRemoteGATTCharacteristic;
     if (!characteristic.value) return;
-    const parsed = parseExtraStatus1(characteristic.value);
-    this.partialReading = { ...this.partialReading, ...parsed };
-    this.tryDispatchReading();
+    try {
+      const parsed = parseExtraStatus1(characteristic.value);
+      this.partialReading = { ...this.partialReading, ...parsed };
+      this.tryDispatchReading();
+    } catch (err) {
+      console.warn('[PM5Service] Malformed EXTRA_STATUS1 packet:', err);
+    }
   };
 
   /**
@@ -139,9 +147,13 @@ export class PM5Service extends EventTarget {
   private handleExtraStatus2 = (event: Event): void => {
     const characteristic = event.target as BluetoothRemoteGATTCharacteristic;
     if (!characteristic.value) return;
-    const parsed = parseExtraStatus2(characteristic.value);
-    this.partialReading = { ...this.partialReading, ...parsed };
-    this.tryDispatchReading();
+    try {
+      const parsed = parseExtraStatus2(characteristic.value);
+      this.partialReading = { ...this.partialReading, ...parsed };
+      this.tryDispatchReading();
+    } catch (err) {
+      console.warn('[PM5Service] Malformed EXTRA_STATUS2 packet:', err);
+    }
   };
 
   /**
