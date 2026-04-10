@@ -24,6 +24,12 @@ class StrokeProcessor {
   // userName for CueContext — set externally before session starts
   private userName = 'Rower';
 
+  // Session-wide accumulators for computing true averages (not sliding window)
+  private totalSplitMs = 0;
+  private totalWatts = 0;
+  private totalStrokeRate = 0;
+  private readingCount = 0;
+
   /**
    * Set targets from check-in data.
    * Should be called after check-in completes and before session starts.
@@ -41,12 +47,38 @@ class StrokeProcessor {
   }
 
   /**
-   * Clear window and fired-once flags.
+   * Clear window, fired-once flags, and session-wide accumulators.
    * MUST be called at session start per RESEARCH.md Pitfall 3.
    */
   reset(): void {
     this.window = [];
     this.halfwayFired = false;
+    this.totalSplitMs = 0;
+    this.totalWatts = 0;
+    this.totalStrokeRate = 0;
+    this.readingCount = 0;
+  }
+
+  /**
+   * Return true averages from ALL readings seen this session (not just the sliding window).
+   * Used at session end to compute accurate summary metrics.
+   * Returns nulls if no readings have been processed.
+   */
+  getAccumulatedAvgs(): {
+    avgSplitMs: number | null;
+    avgWatts: number | null;
+    avgStrokeRate: number | null;
+    readingCount: number;
+  } {
+    if (this.readingCount === 0) {
+      return { avgSplitMs: null, avgWatts: null, avgStrokeRate: null, readingCount: 0 };
+    }
+    return {
+      avgSplitMs: Math.round(this.totalSplitMs / this.readingCount),
+      avgWatts: Math.round(this.totalWatts / this.readingCount),
+      avgStrokeRate: Math.round((this.totalStrokeRate / this.readingCount) * 10) / 10,
+      readingCount: this.readingCount,
+    };
   }
 
   /**
@@ -60,6 +92,12 @@ class StrokeProcessor {
     if (this.window.length > this.windowSize) {
       this.window.shift();
     }
+
+    // Accumulate for session-wide averages (independent of sliding window)
+    this.totalSplitMs += reading.splitMs;
+    this.totalWatts += reading.watts;
+    this.totalStrokeRate += reading.strokeRate;
+    this.readingCount++;
 
     const ctx = this.buildCueContext(reading);
 

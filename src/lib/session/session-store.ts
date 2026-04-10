@@ -7,7 +7,9 @@ type BleStatus = 'disconnected' | 'connecting' | 'connected' | 'reconnecting' | 
 
 // SessionPhase represents the lifecycle of a rowing session.
 // idle: no active session; active: rowing in progress; ending: auto-detected session end
-type SessionPhase = 'idle' | 'active' | 'ending';
+// debriefing: post-session debrief in progress (voice debrief + Supabase writes)
+// Per RESEARCH.md Pitfall 5: must NOT call endSession() until after debrief completes.
+type SessionPhase = 'idle' | 'active' | 'ending' | 'debriefing';
 
 interface SessionState {
   // BLE connection status — drives connection indicator and reconnect UI
