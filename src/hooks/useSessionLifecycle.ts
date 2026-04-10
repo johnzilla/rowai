@@ -48,6 +48,9 @@ export function useSessionLifecycle() {
   }, [latestReading, isSessionActive, sessionPhase, startSession, setSessionPhase]);
 
   // D-09: Poll every 5s — if 30s have passed with no strokes, trigger the end prompt.
+  // Read sessionPhase fresh from the store inside the callback to avoid stale closures;
+  // the interval no longer needs sessionPhase as a dependency, so it is not torn down
+  // and restarted on every phase change.
   useEffect(() => {
     if (!isSessionActive) return;
 
@@ -55,14 +58,16 @@ export function useSessionLifecycle() {
       if (lastStrokeAt.current === null) return;
 
       const idleMs = Date.now() - lastStrokeAt.current;
-      if (idleMs >= 30000 && sessionPhase === 'active') {
+      // Read phase fresh from store rather than from stale closure
+      const currentPhase = useSessionStore.getState().sessionPhase;
+      if (idleMs >= 30000 && currentPhase === 'active') {
         setSessionPhase('ending');
         setShowEndPrompt(true);
       }
     }, 5000);
 
     return () => clearInterval(idleCheckInterval);
-  }, [isSessionActive, sessionPhase, setSessionPhase]);
+  }, [isSessionActive, setSessionPhase]);
 
   // Keep showEndPrompt in sync with sessionPhase (e.g., external state changes).
   useEffect(() => {
