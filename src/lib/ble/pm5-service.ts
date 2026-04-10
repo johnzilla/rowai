@@ -218,9 +218,9 @@ export class PM5Service extends EventTarget {
 
       try {
         await this.connectGatt();
-        // Success — reset attempt counter for next disconnect event
+        // Success — reset attempt counter for next disconnect event.
+        // connectGatt() already dispatches 'connected' as its final step.
         this.reconnectAttempts = 0;
-        this.dispatchEvent(new CustomEvent('connected'));
       } catch {
         // GATT connect failed — schedule another attempt (if under limit)
         this.scheduleReconnect();
