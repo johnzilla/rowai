@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RowAI
+
+Voice-first AI rowing coach for Concept2 indoor rowers. Reads real-time PM5 data via Bluetooth, remembers your workout history and patterns, and delivers adaptive coaching through streaming voice.
+
+## Status
+
+**Phase 1: Foundation** -- Complete
+
+- Next.js 16 PWA with Serwist service worker
+- Supabase email/password auth with session persistence
+- PM5 BLE data pipeline (Web Bluetooth GATT)
+- Real-time metrics display (split, SPM, watts, distance)
+- Session lifecycle (auto-start on first stroke, auto-end after 30s idle)
+- Screen Wake Lock for session stability
+- BLE disconnect recovery with timer fallback mode
+
+**Phase 2: Coaching Loop** -- Up next
+
+**Phase 3: Memory & History** -- Planned
+
+## Tech Stack
+
+- **Frontend:** Next.js 16, React 19, Tailwind CSS v4, TypeScript
+- **PWA:** Serwist (service worker)
+- **Auth/DB:** Supabase (Postgres + Auth)
+- **BLE:** Web Bluetooth API (Chrome Android)
+- **State:** Zustand
+- **Testing:** Vitest
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20+
+- A Supabase project (for auth and database)
+- Chrome Android or Chrome desktop (for Web Bluetooth)
+- Concept2 PM5 rower (for BLE data)
+
+### Setup
 
 ```bash
+# Install dependencies
+npm install
+
+# Copy env template and fill in your Supabase credentials
+cp .env.local.example .env.local
+
+# Push database schema (requires Supabase CLI + linked project)
+supabase db push
+
+# Run dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Testing
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Run PM5 parser tests
+npm test
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Type check
+npx tsc --noEmit
+```
 
-## Learn More
+## Architecture
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+  app/
+    (auth)/         # Login, signup pages
+    onboarding/     # Name-only onboarding (D-04)
+    session/        # Main rowing session page
+  components/
+    ble/            # BleConnectButton (rationale + connect)
+    metrics/        # MetricDisplay (split large, secondaries)
+    session/        # SessionEndPrompt
+  hooks/
+    useSessionLifecycle.ts  # Auto-start/end state machine
+  lib/
+    ble/            # PM5 constants, parser (TDD), service
+    session/        # Zustand session store
+    supabase/       # Client, server, middleware helpers
+    wake-lock/      # WakeLockManager
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Key Design Decisions
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Voice-first, no avatar** -- core hypothesis is the coaching relationship, not visual presence
+- **PWA on Chrome Android** -- Web Bluetooth works here; iOS Safari does not support it
+- **PM5 BLE read-only** -- stroke rate, split, watts, distance. No Logbook API write-back in v1
+- **Minimal onboarding** -- name only upfront, experience/tone/injuries collected progressively
+- **Hybrid coaching cues** -- pre-computed templates (<200ms) for common patterns, LLM for novel situations
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Private
