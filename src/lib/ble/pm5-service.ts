@@ -173,12 +173,15 @@ export class PM5Service extends EventTarget {
       timestamp: Date.now(),
     };
 
+    // Do not dispatch idle readings — they carry no valid performance data.
+    // useSessionLifecycle already handles auto-start on first non-idle stroke.
+    if (reading.strokeState === 0) {
+      return;
+    }
+
     // T-02-01 mitigation: validate before dispatching — corrupt bytes cannot reach session state
     try {
-      // Skip validation when splitMs is 0 (PM5 not yet in motion — idle state is normal)
-      if (reading.splitMs > 0) {
-        validateStrokeReading(reading);
-      }
+      validateStrokeReading(reading);
     } catch (err) {
       console.warn('[PM5Service] Discarding out-of-range reading:', err);
       return;
