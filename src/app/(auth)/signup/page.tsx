@@ -5,6 +5,16 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 
+function friendlySignupError(message: string): string {
+  if (message.toLowerCase().includes('already registered')) {
+    return 'An account with this email already exists. Try logging in instead.';
+  }
+  if (message.toLowerCase().includes('rate limit')) {
+    return 'Too many attempts. Please wait a moment and try again.';
+  }
+  return 'Could not create your account. Please try again.';
+}
+
 export default function SignupPage() {
   const router = useRouter();
   const [name, setName] = useState('');
@@ -29,7 +39,7 @@ export default function SignupPage() {
     });
 
     if (signUpError) {
-      setError(signUpError.message);
+      setError(friendlySignupError(signUpError.message));
       setLoading(false);
       return;
     }
