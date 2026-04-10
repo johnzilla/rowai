@@ -10,6 +10,10 @@ import { useSessionLifecycle } from '@/hooks/useSessionLifecycle';
 import { BleConnectButton } from '@/components/ble/BleConnectButton';
 import { MetricDisplay } from '@/components/metrics/MetricDisplay';
 import { SessionEndPrompt } from '@/components/session/SessionEndPrompt';
+import { CoachingIndicator } from '@/components/coaching/CoachingIndicator';
+import { MidSessionControls } from '@/components/coaching/MidSessionControls';
+import { useCoachingSession } from '@/hooks/useCoachingSession';
+import { audioQueue } from '@/lib/coaching/audio-queue';
 
 /**
  * Session page — the core Phase 1 user-facing experience.
@@ -33,6 +37,7 @@ export default function SessionPage() {
   const sessionStartedAt = useSessionStore((s) => s.sessionStartedAt);
 
   const { showEndPrompt, confirmEnd, dismissEnd } = useSessionLifecycle();
+  useCoachingSession();
 
   // Track that bindVisibilityChange has been called at most once per mount.
   const visibilityBound = useRef(false);
@@ -70,6 +75,13 @@ export default function SessionPage() {
         wakeLockManager.bindVisibilityChange();
         visibilityBound.current = true;
       }
+      // Resume AudioContext if suspended after backgrounding (RESEARCH.md Pitfall 2)
+      try {
+        await audioQueue.ensureRunning();
+      } catch {
+        // AudioQueue may not be initialized yet if user came from /session directly
+        // (bypassing check-in). initialize() will be called on first user gesture.
+      }
     };
 
     pm5Service.addEventListener('connected', handleConnected);
@@ -103,8 +115,12 @@ export default function SessionPage() {
       {/* Main content area */}
       <div className="flex flex-col flex-1">
         {isActive ? (
-          /* Metric display — shown once BLE is connected or reconnecting */
-          <MetricDisplay reading={latestReading} sessionStartedAt={sessionStartedAt} bleStatus={bleStatus} />
+          /* Coaching indicator + metric display + mid-session controls */
+          <>
+            <CoachingIndicator />
+            <MetricDisplay reading={latestReading} sessionStartedAt={sessionStartedAt} bleStatus={bleStatus} />
+            <MidSessionControls />
+          </>
         ) : (
           /* Rationale / connecting state — BleConnectButton renders the full rationale card */
           <div className="flex flex-col flex-1 items-center justify-center">
