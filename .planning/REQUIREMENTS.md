@@ -16,7 +16,7 @@
 ### Onboarding & Auth
 
 - [ ] **ONBD-01**: User can sign up with email/password via Supabase Auth
-- [ ] **ONBD-02**: User completes onboarding: name, experience level, coaching tone preference, injuries/limitations
+- [ ] **ONBD-02**: User completes onboarding with name (experience level, coaching tone, injuries collected progressively after first session per D-04)
 - [ ] **ONBD-03**: User session persists across browser refresh
 
 ### Pre-Session
