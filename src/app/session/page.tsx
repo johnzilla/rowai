@@ -79,11 +79,12 @@ export default function SessionPage() {
     };
   }, []);
 
-  // Cleanup on unmount — disconnect BLE and release Wake Lock.
+  // Cleanup on unmount — disconnect BLE, release Wake Lock, and remove visibility listener.
   useEffect(() => {
     return () => {
       pm5Service.disconnect();
       wakeLockManager.release();
+      wakeLockManager.unbindVisibilityChange();
     };
   }, []);
 

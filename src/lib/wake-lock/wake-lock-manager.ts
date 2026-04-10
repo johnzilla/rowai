@@ -14,6 +14,7 @@
  */
 export class WakeLockManager {
   private sentinel: WakeLockSentinel | null = null;
+  private visibilityChangeHandler: (() => void) | null = null;
 
   /**
    * Acquire a screen wake lock.
@@ -65,14 +66,28 @@ export class WakeLockManager {
    * BLE-03: The OS releases the lock when the user switches tabs or locks the screen.
    * On visibility restore, we must re-acquire to maintain BLE connection stability.
    *
-   * Call this once at session start. The listener persists for the session lifetime.
+   * Safe to call multiple times — only one listener is registered.
+   * Call unbindVisibilityChange() on session end to remove the listener.
    */
   bindVisibilityChange(): void {
-    document.addEventListener('visibilitychange', async () => {
+    if (this.visibilityChangeHandler) return; // already bound
+    this.visibilityChangeHandler = async () => {
       if (document.visibilityState === 'visible' && this.sentinel === null) {
         await this.acquire();
       }
-    });
+    };
+    document.addEventListener('visibilitychange', this.visibilityChangeHandler);
+  }
+
+  /**
+   * Remove the 'visibilitychange' listener added by bindVisibilityChange().
+   * Call on session page unmount to prevent listener accumulation.
+   */
+  unbindVisibilityChange(): void {
+    if (this.visibilityChangeHandler) {
+      document.removeEventListener('visibilitychange', this.visibilityChangeHandler);
+      this.visibilityChangeHandler = null;
+    }
   }
 
   /**
