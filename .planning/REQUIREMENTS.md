@@ -90,39 +90,39 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BLE-01 | TBD | Pending |
-| BLE-02 | TBD | Pending |
-| BLE-03 | TBD | Pending |
-| BLE-04 | TBD | Pending |
-| BLE-05 | TBD | Pending |
-| ONBD-01 | TBD | Pending |
-| ONBD-02 | TBD | Pending |
-| ONBD-03 | TBD | Pending |
-| PRES-01 | TBD | Pending |
-| PRES-02 | TBD | Pending |
-| PRES-03 | TBD | Pending |
-| COACH-01 | TBD | Pending |
-| COACH-02 | TBD | Pending |
-| COACH-03 | TBD | Pending |
-| COACH-04 | TBD | Pending |
-| MID-01 | TBD | Pending |
-| MID-02 | TBD | Pending |
-| MID-03 | TBD | Pending |
-| POST-01 | TBD | Pending |
-| POST-02 | TBD | Pending |
-| POST-03 | TBD | Pending |
-| MEM-01 | TBD | Pending |
-| MEM-02 | TBD | Pending |
-| MEM-03 | TBD | Pending |
-| MEM-04 | TBD | Pending |
-| HIST-01 | TBD | Pending |
-| HIST-02 | TBD | Pending |
+| BLE-01 | Phase 1 | Pending |
+| BLE-02 | Phase 1 | Pending |
+| BLE-03 | Phase 1 | Pending |
+| BLE-04 | Phase 1 | Pending |
+| BLE-05 | Phase 1 | Pending |
+| ONBD-01 | Phase 1 | Pending |
+| ONBD-02 | Phase 1 | Pending |
+| ONBD-03 | Phase 1 | Pending |
+| PRES-01 | Phase 2 | Pending |
+| PRES-02 | Phase 2 | Pending |
+| PRES-03 | Phase 2 | Pending |
+| COACH-01 | Phase 2 | Pending |
+| COACH-02 | Phase 2 | Pending |
+| COACH-03 | Phase 2 | Pending |
+| COACH-04 | Phase 2 | Pending |
+| MID-01 | Phase 2 | Pending |
+| MID-02 | Phase 2 | Pending |
+| MID-03 | Phase 2 | Pending |
+| POST-01 | Phase 2 | Pending |
+| POST-02 | Phase 2 | Pending |
+| POST-03 | Phase 2 | Pending |
+| MEM-01 | Phase 3 | Pending |
+| MEM-02 | Phase 3 | Pending |
+| MEM-03 | Phase 3 | Pending |
+| MEM-04 | Phase 3 | Pending |
+| HIST-01 | Phase 3 | Pending |
+| HIST-02 | Phase 3 | Pending |
 
 **Coverage:**
 - v1 requirements: 27 total
-- Mapped to phases: 0
-- Unmapped: 27 (pending roadmap creation)
+- Mapped to phases: 27
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-09*
-*Last updated: 2026-04-09 after initial definition*
+*Last updated: 2026-04-09 after roadmap creation*

@@ -1,0 +1,63 @@
+# Project State
+
+## Project Reference
+
+See: .planning/PROJECT.md (updated 2026-04-09)
+
+**Core value:** A coaching relationship that compounds across sessions — the coach remembers you, adapts to your energy, and makes solo rowing feel relational rather than solitary.
+**Current focus:** Phase 1 — Foundation
+
+## Current Position
+
+Phase: 1 of 3 (Foundation)
+Plan: 0 of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-04-09 — Roadmap created, phases derived from 27 v1 requirements
+
+Progress: [░░░░░░░░░░] 0%
+
+## Performance Metrics
+
+**Velocity:**
+- Total plans completed: 0
+- Average duration: -
+- Total execution time: 0 hours
+
+**By Phase:**
+
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| - | - | - | - |
+
+**Recent Trend:**
+- Last 5 plans: none yet
+- Trend: -
+
+*Updated after each plan completion*
+
+## Accumulated Context
+
+### Decisions
+
+Decisions are logged in PROJECT.md Key Decisions table.
+Recent decisions affecting current work:
+
+- Init: PWA on Chrome Android (not native iOS) — Web Bluetooth constraint
+- Init: Voice-first, no avatar — core hypothesis is coaching relationship
+- Init: Hybrid pre-computed/LLM cues — pure LLM exceeds 500ms latency target
+- Init: Supabase Postgres KV over Vector DB — sufficient for v1 scale
+- Init: BLE required for MVP — real data makes coaching real
+
+### Pending Todos
+
+None yet.
+
+### Blockers/Concerns
+
+None yet.
+
+## Session Continuity
+
+Last session: 2026-04-09
+Stopped at: Roadmap created. Phase 1 ready for `/gsd-plan-phase 1`
+Resume file: None
