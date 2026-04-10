@@ -28,7 +28,13 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. User can pair PM5 via Web Bluetooth and see live stroke rate, split, watts, and distance updating on screen
   4. Screen stays awake and BLE connection stays alive during a full rowing session
   5. App announces BLE disconnect and attempts automatic reconnect; session can continue in timer fallback mode
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Next.js 16 PWA scaffold + Supabase auth + onboarding (ONBD-01, ONBD-02, ONBD-03)
+- [ ] 01-02-PLAN.md — BLE service module + PM5 parser + Wake Lock + Zustand store (BLE-01 through BLE-05)
+- [ ] 01-03-PLAN.md — Session UI: metrics display, auto-start/end lifecycle, disconnect recovery UX
+
 **UI hint**: yes
 
 ### Phase 2: Coaching Loop
@@ -63,6 +69,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/TBD | Not started | - |
+| 1. Foundation | 0/3 | Planned | - |
 | 2. Coaching Loop | 0/TBD | Not started | - |
 | 3. Memory & History | 0/TBD | Not started | - |
