@@ -47,7 +47,14 @@ Plans:
   3. High-priority correction cues interrupt lower-priority cues without audio overlap
   4. User can tap "too hard," "push me," or "I'm good" mid-session and hear an adaptive LLM response
   5. Coach delivers a voice debrief at session end and session stats are saved to Supabase
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 02-01-PLAN.md -- Coaching types, Zustand coaching store, AudioQueue, StrokeProcessor, CueRouter, cue templates, Supabase schema
+- [ ] 02-02-PLAN.md -- Claude LLM coach API route, Cartesia TTS proxy route, session writer
+- [ ] 02-03-PLAN.md -- Pre-session check-in screen, mid-session tap controls, coaching indicator, pipeline wiring
+- [ ] 02-04-PLAN.md -- Post-session voice debrief, session summary card, Supabase session + memory writes
+
 **UI hint**: yes
 
 ### Phase 3: Memory & History
