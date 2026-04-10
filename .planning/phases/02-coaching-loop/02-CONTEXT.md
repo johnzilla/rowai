@@ -109,7 +109,7 @@ This phase delivers the complete coaching loop: a voice check-in before rowing, 
 <deferred>
 ## Deferred Ideas
 
-None — discussion stayed within phase scope
+- **MID-02 voice input**: Per D-10, voice input (Web Speech API / push-to-talk) is deferred from Phase 2. Erg noise makes speech recognition unreliable. Phase 2 delivers tap-only input (3 fixed buttons) as the fallback input mechanism. Voice input may be revisited in a future phase if noise-cancellation or push-to-talk proves viable.
 
 </deferred>
 
