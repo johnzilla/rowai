@@ -773,32 +773,32 @@ Mid-session tap inputs are fixed buttons — no user-provided text reaches LLM p
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Cartesia WebSocket vs SSE endpoint for client-side calls**
    - What we know: WebSocket API supports multiplexing (multiple concurrent cues); SSE endpoint is simpler
    - What's unclear: Whether SDK v3 `cartesia.tts.websocket()` method signature is correct (README only showed REST API)
-   - Recommendation: Implement SSE endpoint first (`/tts/sse` is simpler), switch to WebSocket if prosodic continuity across a session matters
+   - RESOLVED: SSE endpoint chosen for initial implementation (Plan 02 Task 2). Simpler integration, avoids unverified WebSocket SDK method signatures. Can migrate to WebSocket later if prosodic continuity matters.
 
 2. **Cartesia voice ID for coaching tone**
    - What we know: Katie (`f786b574-...`) and Kiefer (`228fca29-...`) are documented as "stable, realistic, suitable for voice agents"
    - What's unclear: Which voice best matches the "calm and supportive" tone in D-05
-   - Recommendation: Defer to Claude's discretion (per CONTEXT.md); founder should A/B test both on a real session
+   - RESOLVED: Deferred to Claude's discretion and founder A/B testing (per CONTEXT.md). Voice ID configured via `CARTESIA_VOICE_ID` env var so it can be swapped without code changes.
 
 3. **`AudioContext` survival across Next.js client-side navigation**
    - What we know: Module-level singletons survive client-side navigation in Next.js (no full page reload)
    - What's unclear: Whether Next.js 16's App Router does anything to unmount/remount that breaks singleton state
-   - Recommendation: Implement the singleton pattern, then verify manually on a physical device
+   - RESOLVED: Module-level singleton pattern adopted (Plan 01 Task 2, AudioQueue). Manual device verification required during execution checkpoint.
 
 4. **Direct Cartesia client calls vs server proxy for pre-computed cues**
    - What we know: Server proxy adds ~50-200ms round trip; direct client call risks API key exposure
    - What's unclear: Cartesia's acceptable use policy for client-side API key usage
-   - Recommendation: Use `NEXT_PUBLIC_CARTESIA_API_KEY` for pre-computed path (low risk — Cartesia charges per character, not a sensitive data key); server proxy only for LLM-generated text (which contains session data)
+   - RESOLVED: `NEXT_PUBLIC_CARTESIA_API_KEY` used for pre-computed path (client-side, avoids server round-trip to hit <500ms target). Server proxy (`/api/tts`) used for LLM-generated text which contains session data. Per-character billing model makes key exposure low-risk.
 
 5. **`debriefing` SessionPhase and endSession() timing**
    - What we know: Current `endSession()` resets to `idle` immediately
    - What's unclear: Whether to add `'debriefing'` to the `SessionPhase` union type or handle debrief purely in coaching store
-   - Recommendation: Add `'debriefing'` to `SessionPhase` in the session store — this makes the lifecycle explicit and prevents accidental state loss
+   - RESOLVED: `'debriefing'` added to `SessionPhase` union type in session store (Plan 04 Task 1). Makes lifecycle explicit and prevents accidental state loss during debrief LLM calls and Supabase writes.
 
 ---
 
