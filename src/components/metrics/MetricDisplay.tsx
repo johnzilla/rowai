@@ -1,10 +1,12 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import type { StrokeReading } from '@/lib/ble/pm5-parser';
 
 interface MetricDisplayProps {
   reading: StrokeReading | null;
   sessionStartedAt: number | null;
+  bleStatus?: 'disconnected' | 'connecting' | 'connected' | 'reconnecting';
 }
 
 /**
@@ -28,22 +30,34 @@ function formatMSS(ms: number): string {
  *
  * When no reading is available, dashes are shown as placeholders.
  */
-export function MetricDisplay({ reading, sessionStartedAt }: MetricDisplayProps) {
-  // Derive elapsed time from session start, not from PM5 (PM5 resets on power cycle).
-  const elapsedMs =
-    sessionStartedAt !== null ? Date.now() - sessionStartedAt : reading?.elapsedTimeMs ?? null;
+export function MetricDisplay({ reading, sessionStartedAt, bleStatus }: MetricDisplayProps) {
+  // Timer fallback (BLE-04): keep elapsed time updating even when BLE is disconnected.
+  // Without this, the component stops re-rendering when no new readings arrive.
+  const [now, setNow] = useState(Date.now());
+  const isReconnecting = bleStatus === 'reconnecting';
 
-  const splitDisplay = reading ? formatMSS(reading.splitMs) : '--:--';
+  useEffect(() => {
+    if (sessionStartedAt === null) return;
+    const interval = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, [sessionStartedAt]);
+
+  const elapsedMs = sessionStartedAt !== null ? now - sessionStartedAt : reading?.elapsedTimeMs ?? null;
+
+  const splitDisplay = isReconnecting ? '--:--' : (reading ? formatMSS(reading.splitMs) : '--:--');
   const elapsedDisplay = elapsedMs !== null ? formatMSS(elapsedMs) : '--:--';
   const distanceDisplay = reading ? `${reading.distanceMeters}m` : '--';
-  const spmDisplay = reading ? reading.strokeRate.toString() : '--';
-  const wattsDisplay = reading ? reading.watts.toString() : '--';
+  const spmDisplay = isReconnecting ? '--' : (reading ? reading.strokeRate.toString() : '--');
+  const wattsDisplay = isReconnecting ? '--' : (reading ? reading.watts.toString() : '--');
 
   return (
     <div className="flex flex-col flex-1 px-6 py-4 gap-4">
       {/* D-03: Top progress indicators — elapsed time and total distance */}
       <div className="flex justify-between items-center text-sm text-gray-400">
-        <span>{elapsedDisplay}</span>
+        <span>
+          {elapsedDisplay}
+          {isReconnecting && <span className="ml-2 text-yellow-500 text-xs">(timer only)</span>}
+        </span>
         <span>{distanceDisplay}</span>
       </div>
 

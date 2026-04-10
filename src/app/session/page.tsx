@@ -103,7 +103,7 @@ export default function SessionPage() {
       <div className="flex flex-col flex-1">
         {isActive ? (
           /* Metric display — shown once BLE is connected or reconnecting */
-          <MetricDisplay reading={latestReading} sessionStartedAt={sessionStartedAt} />
+          <MetricDisplay reading={latestReading} sessionStartedAt={sessionStartedAt} bleStatus={bleStatus} />
         ) : (
           /* Rationale / connecting state — BleConnectButton renders the full rationale card */
           <div className="flex flex-col flex-1 items-center justify-center">

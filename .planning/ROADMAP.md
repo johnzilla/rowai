@@ -24,16 +24,16 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Requirements**: BLE-01, BLE-02, BLE-03, BLE-04, BLE-05, ONBD-01, ONBD-02, ONBD-03
 **Success Criteria** (what must be TRUE):
   1. User can sign up, log in, and stay logged in across browser refreshes
-  2. User completes onboarding (name, experience level, coaching tone, injuries) and data persists
+  2. User completes onboarding (name only per D-04; experience level, coaching tone, injuries collected progressively) and data persists
   3. User can pair PM5 via Web Bluetooth and see live stroke rate, split, watts, and distance updating on screen
   4. Screen stays awake and BLE connection stays alive during a full rowing session
   5. App announces BLE disconnect and attempts automatic reconnect; session can continue in timer fallback mode
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Next.js 16 PWA scaffold + Supabase auth + onboarding (ONBD-01, ONBD-02, ONBD-03)
-- [ ] 01-02-PLAN.md — BLE service module + PM5 parser + Wake Lock + Zustand store (BLE-01 through BLE-05)
-- [ ] 01-03-PLAN.md — Session UI: metrics display, auto-start/end lifecycle, disconnect recovery UX
+- [x] 01-01-PLAN.md — Next.js 16 PWA scaffold + Supabase auth + onboarding (ONBD-01, ONBD-02, ONBD-03)
+- [x] 01-02-PLAN.md — BLE service module + PM5 parser + Wake Lock + Zustand store (BLE-01 through BLE-05)
+- [x] 01-03-PLAN.md — Session UI: metrics display, auto-start/end lifecycle, disconnect recovery UX
 
 **UI hint**: yes
 
