@@ -50,6 +50,7 @@ export default function OnboardingPage() {
       return;
     }
 
+    setLoading(false);
     router.push('/session');
   }
 
