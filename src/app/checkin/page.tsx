@@ -18,7 +18,9 @@ export default function CheckinPage() {
   const router = useRouter();
 
   // T-02-11: Auth guard — redirect unauthenticated users to /login
+  // Skipped in development (solo builder — no auth friction for local testing)
   useEffect(() => {
+    if (process.env.NODE_ENV === 'development') return;
     const checkAuth = async () => {
       const supabase = createClient();
       const {

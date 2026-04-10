@@ -45,8 +45,9 @@ export default function SessionPage() {
   const listenersSetup = useRef(false);
 
   // Belt-and-suspenders auth guard (T-03-04 mitigation — double protection).
-  // Middleware handles this for server-rendered routes; page-level guard covers edge cases.
+  // Skipped in development (solo builder — no auth friction for local testing)
   useEffect(() => {
+    if (process.env.NODE_ENV === 'development') return;
     const checkAuth = async () => {
       const supabase = createClient();
       const {

@@ -35,17 +35,19 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protect auth-gated routes
-  const protectedPaths = ["/session", "/onboarding"];
-  const pathname = request.nextUrl.pathname;
-  const isProtected = protectedPaths.some((path) =>
-    pathname.startsWith(path)
-  );
+  // Protect auth-gated routes (skip in local dev — solo builder)
+  if (process.env.NODE_ENV !== "development") {
+    const protectedPaths = ["/session", "/onboarding"];
+    const pathname = request.nextUrl.pathname;
+    const isProtected = protectedPaths.some((path) =>
+      pathname.startsWith(path)
+    );
 
-  if (isProtected && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+    if (isProtected && !user) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
+    }
   }
 
   return supabaseResponse;
