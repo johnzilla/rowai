@@ -20,6 +20,7 @@ export interface CoachMemoryEntry {
 }
 
 import { createClient } from '@/lib/supabase/client';
+import { cachePendingSession, cachePendingMemory } from './offline-cache';
 
 /**
  * Inserts a row into the sessions table.
@@ -50,12 +51,14 @@ export async function writeSession(
 
     if (error) {
       console.error('[session-writer] writeSession error:', error.message);
+      cachePendingSession(data);
       return null;
     }
 
     return row as { id: string };
   } catch (err) {
     console.error('[session-writer] writeSession unexpected error:', err);
+    cachePendingSession(data);
     return null;
   }
 }
@@ -86,8 +89,10 @@ export async function writeCoachMemory(
 
     if (error) {
       console.error('[session-writer] writeCoachMemory error:', error.message);
+      cachePendingMemory(userId, entries);
     }
   } catch (err) {
     console.error('[session-writer] writeCoachMemory unexpected error:', err);
+    cachePendingMemory(userId, entries);
   }
 }
