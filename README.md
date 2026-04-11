@@ -24,7 +24,13 @@ Voice-first AI rowing coach for Concept2 indoor rowers. Reads real-time PM5 data
 - Post-session voice debrief with session summary card
 - Session data and coach memory persistence to Supabase
 
-**Phase 3: Memory & History** -- Planned
+**Phase 3: Memory & History** -- Complete
+
+- Memory snapshot reader (last 5 sessions + top 20 KV entries, ~500 tokens)
+- Server-side memory injection into coach system prompt
+- Offline caching with localStorage fallback and auto-sync on reconnect
+- Session history page (`/history`) with card list sorted by date
+- Auth guard on coach API route
 
 ## Tech Stack
 

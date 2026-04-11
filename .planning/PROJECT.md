@@ -22,11 +22,15 @@ A coaching relationship that compounds across sessions — the coach remembers y
 - ✓ Mid-session tap interaction ("too hard," "push me," "I'm good") with LLM voice response — Phase 2
 - ✓ Post-session voice debrief with summary card and session data persistence — Phase 2
 - ✓ Coach memory key-value writes after each session — Phase 2
+- ✓ Persistent session memory (last 5 sessions + KV memory read at session start) — Phase 3
+- ✓ Coach references past sessions naturally in conversation — Phase 3
+- ✓ Fixed-size memory snapshot (~500 tokens, bounded) — Phase 3
+- ✓ Offline session caching with localStorage fallback and auto-sync — Phase 3
+- ✓ Session history browsing (card list sorted by date) — Phase 3
 
 ### Active
 
-- [ ] Persistent session memory in Supabase (user profile, session history, coach memory key-value store)
-- [ ] Error degradation (LLM timeout fallback, offline session caching)
+- [ ] Error degradation (LLM timeout fallback)
 
 ### Out of Scope
 
@@ -91,4 +95,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-11 after Phase 2 completion*
+*Last updated: 2026-04-11 after Phase 3 completion (v1.0 milestone complete)*

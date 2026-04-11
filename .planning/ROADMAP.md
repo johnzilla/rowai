@@ -72,7 +72,7 @@ Plans:
 Plans:
 - [ ] 03-01-PLAN.md — Memory snapshot reader + coach route injection (MEM-01, MEM-02, MEM-03)
 - [ ] 03-02-PLAN.md — Offline caching with localStorage fallback and sync (MEM-04)
-- [ ] 03-03-PLAN.md — Session history UI and check-in screen link (HIST-01, HIST-02)
+- [x] 03-03-PLAN.md — Session history UI and check-in screen link (HIST-01, HIST-02)
 
 **UI hint**: yes
 
