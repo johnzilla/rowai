@@ -53,7 +53,7 @@ Plans:
 - [x] 02-01-PLAN.md -- Coaching types, Zustand coaching store, AudioQueue, StrokeProcessor, CueRouter, cue templates, Supabase schema
 - [x] 02-02-PLAN.md -- Claude LLM coach API route, Cartesia TTS proxy route, session writer
 - [x] 02-03-PLAN.md -- Pre-session check-in screen, mid-session tap controls, coaching indicator, pipeline wiring
-- [ ] 02-04-PLAN.md -- Post-session voice debrief, session summary card, Supabase session + memory writes
+- [x] 02-04-PLAN.md -- Post-session voice debrief, session summary card, Supabase session + memory writes
 
 **UI hint**: yes
 
