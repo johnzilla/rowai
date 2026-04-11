@@ -71,11 +71,13 @@ A coaching relationship that compounds across sessions — the coach remembers y
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| PWA over native iOS | Founder has both iOS and Android; PWA ships faster, no app store. Web Bluetooth works on Chrome Android. | -- Pending |
-| Voice-first, no avatar | Core hypothesis is coaching relationship, not visual presence. Avatar is v2+ polish. | -- Pending |
-| Hybrid pre-computed/LLM cues | Pure LLM exceeds latency target. Pre-computed handles 80% of common patterns at ~145ms. | -- Pending |
-| Supabase Postgres over Vector DB | Structured session data + KV coach memory sufficient for v1. Vector DB adds complexity without clear benefit at this scale. | -- Pending |
-| BLE required for MVP | Codex challenged this (timer-based could test relationship hypothesis). Founder defended: real data makes coaching real, not a talking timer. | -- Pending |
+| PWA over native iOS | Founder has both iOS and Android; PWA ships faster, no app store. Web Bluetooth works on Chrome Android. | ✓ Shipped v1.0 |
+| Voice-first, no avatar | Core hypothesis is coaching relationship, not visual presence. Avatar is v2+ polish. | ✓ Shipped v1.0 |
+| Hybrid pre-computed/LLM cues | Pure LLM exceeds latency target. Pre-computed handles 80% of common patterns at ~145ms. | ✓ Shipped v1.0 |
+| Supabase Postgres over Vector DB | Structured session data + KV coach memory sufficient for v1. Vector DB adds complexity without clear benefit at this scale. | ✓ Shipped v1.0 — 20-entry KV cap works well |
+| BLE required for MVP | Codex challenged this (timer-based could test relationship hypothesis). Founder defended: real data makes coaching real, not a talking timer. | ✓ Shipped v1.0 |
+| Tap-only input for MVP | Erg noise makes speech recognition unreliable. 3 fixed tap buttons cover core interactions. | ✓ Shipped v1.0 — voice input deferred |
+| Auth bypass in dev mode | Solo builder — auth redirect friction removed during development. Production auth unchanged. | ✓ Practical improvement |
 
 ## Evolution
 
