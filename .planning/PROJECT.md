@@ -16,15 +16,16 @@ A coaching relationship that compounds across sessions — the coach remembers y
 - ✓ User onboarding (name only, progressive disclosure per D-04) — Phase 1
 - ✓ Screen Wake Lock API to maintain BLE + audio during sessions — Phase 1
 - ✓ Error degradation: BLE disconnect with timer fallback mode — Phase 1
+- ✓ Pre-session tap check-in (energy level, time available, session type suggestion) — Phase 2
+- ✓ Adaptive real-time voice coaching with streaming TTS (Cartesia Sonic) — Phase 2
+- ✓ Hybrid coaching engine: pre-computed cue templates for common patterns, LLM (Claude API) for novel situations — Phase 2
+- ✓ Mid-session tap interaction ("too hard," "push me," "I'm good") with LLM voice response — Phase 2
+- ✓ Post-session voice debrief with summary card and session data persistence — Phase 2
+- ✓ Coach memory key-value writes after each session — Phase 2
 
 ### Active
 
-- [ ] Pre-session voice check-in (energy level, time available, session type preference)
-- [ ] Adaptive real-time voice coaching with streaming TTS (Cartesia Sonic)
-- [ ] Hybrid coaching engine: pre-computed cue templates for common patterns, LLM (Claude API) for novel situations
 - [ ] Persistent session memory in Supabase (user profile, session history, coach memory key-value store)
-- [ ] Mid-session voice/tap interaction ("too hard," "push me," "I'm good")
-- [ ] Post-session voice debrief with summary and memory write-back
 - [ ] Error degradation (LLM timeout fallback, offline session caching)
 
 ### Out of Scope
@@ -90,4 +91,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-10 after Phase 1 completion*
+*Last updated: 2026-04-11 after Phase 2 completion*

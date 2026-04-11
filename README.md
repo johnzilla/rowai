@@ -14,14 +14,15 @@ Voice-first AI rowing coach for Concept2 indoor rowers. Reads real-time PM5 data
 - Screen Wake Lock for session stability
 - BLE disconnect recovery with timer fallback mode
 
-**Phase 2: Coaching Loop** -- In progress (3/4 plans complete)
+**Phase 2: Coaching Loop** -- Complete
 
 - Coaching pipeline core (types, Zustand store, AudioQueue with priority interrupt, StrokeProcessor, CueRouter, cue templates)
 - Server API routes: Claude streaming proxy (`/api/coach`), Cartesia TTS proxy (`/api/tts`), session writer
 - Pre-session check-in screen (energy level, time available, session suggestion)
 - Mid-session tap controls ("Too Hard" / "Push Me" / "I'm Good")
 - Coaching indicator (pulsing bar when coach speaks)
-- Remaining: post-session debrief and session persistence (Plan 02-04)
+- Post-session voice debrief with session summary card
+- Session data and coach memory persistence to Supabase
 
 **Phase 3: Memory & History** -- Planned
 
