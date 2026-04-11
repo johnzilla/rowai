@@ -1,4 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { createServerClient } from '@supabase/ssr';
+import { buildMemorySnapshot } from '@/lib/coaching/memory-snapshot';
 
 export const runtime = 'edge';
 
@@ -30,8 +32,40 @@ interface SessionContext {
 
 const ALLOWED_INTENTS: Intent[] = ['too_hard', 'push_me', 'im_good', 'checkin', 'debrief'];
 
-const COACH_SYSTEM_PROMPT =
-  "You are a calm, direct rowing coach. Keep responses under 2 sentences for mid-session intents, up to 4 sentences for debrief. Reference the athlete's current metrics when relevant. No filler phrases. Tone: supportive but honest. Never use 'Great job!' as a standalone response.";
+function getSupabaseFromRequest(request: Request) {
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          const cookieHeader = request.headers.get('Cookie') ?? '';
+          return cookieHeader
+            .split(';')
+            .map((c) => {
+              const [name, ...rest] = c.trim().split('=');
+              return { name: name ?? '', value: rest.join('=') };
+            })
+            .filter((c) => c.name);
+        },
+        setAll() { /* read-only in route handler */ },
+      },
+    }
+  );
+}
+
+function buildSystemPrompt(memoryBlock: string): string {
+  const base =
+    "You are a calm, direct rowing coach. Keep responses under 2 sentences for mid-session intents, up to 4 sentences for debrief. Reference the athlete's current metrics when relevant. No filler phrases. Tone: supportive but honest. Never use 'Great job!' as a standalone response.";
+
+  if (!memoryBlock) return base;
+
+  return `${base}
+
+${memoryBlock}
+
+IMPORTANT: Reference the athlete's past sessions naturally when relevant -- e.g., "Last Tuesday you held 1:55 for 20 minutes, think you can match that today?" Do NOT explicitly say "according to my records" or "I see from your history." Speak as a coach who simply KNOWS their athlete.`;
+}
 
 function formatSplit(splitMs: number): string {
   const totalSec = Math.round(splitMs / 1000);
@@ -115,12 +149,26 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const validIntent = intent as Intent;
+
+  const supabase = getSupabaseFromRequest(request);
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let memoryBlock = '';
+  if (user) {
+    try {
+      memoryBlock = await buildMemorySnapshot(supabase, user.id);
+    } catch (err) {
+      console.error('[coach] memory snapshot error:', err);
+      // Continue without memory -- graceful degradation
+    }
+  }
+
   const client = new Anthropic({ apiKey });
 
   const stream = client.messages.stream({
     model: 'claude-haiku-4-5',
     max_tokens: getMaxTokens(validIntent),
-    system: COACH_SYSTEM_PROMPT,
+    system: buildSystemPrompt(memoryBlock),
     messages: [{ role: 'user', content: buildPrompt(validIntent, sessionContext) }],
   });
 
