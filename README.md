@@ -2,35 +2,26 @@
 
 Voice-first AI rowing coach for Concept2 indoor rowers. Reads real-time PM5 data via Bluetooth, remembers your workout history and patterns, and delivers adaptive coaching through streaming voice.
 
-## Status
+**v1.0 MVP shipped** -- all core features complete.
 
-**Phase 1: Foundation** -- Complete
+## What It Does
 
-- Next.js 16 PWA with Serwist service worker
-- Supabase email/password auth with session persistence
-- PM5 BLE data pipeline (Web Bluetooth GATT)
-- Real-time metrics display (split, SPM, watts, distance)
-- Session lifecycle (auto-start on first stroke, auto-end after 30s idle)
-- Screen Wake Lock for session stability
-- BLE disconnect recovery with timer fallback mode
+1. **Check in** -- Coach greets you, asks about energy and time, suggests a session type
+2. **Connect** -- Pair your Concept2 PM5 via Bluetooth
+3. **Row** -- Real-time voice coaching with adaptive cues (pace, effort, encouragement)
+4. **Interact** -- Tap "Too Hard" / "Push Me" / "I'm Good" for instant coach response
+5. **Finish** -- Voice debrief summarizing your session, stats saved automatically
+6. **Remember** -- Next session, the coach knows your history and references past workouts
 
-**Phase 2: Coaching Loop** -- Complete
+## Features
 
-- Coaching pipeline core (types, Zustand store, AudioQueue with priority interrupt, StrokeProcessor, CueRouter, cue templates)
-- Server API routes: Claude streaming proxy (`/api/coach`), Cartesia TTS proxy (`/api/tts`), session writer
-- Pre-session check-in screen (energy level, time available, session suggestion)
-- Mid-session tap controls ("Too Hard" / "Push Me" / "I'm Good")
-- Coaching indicator (pulsing bar when coach speaks)
-- Post-session voice debrief with session summary card
-- Session data and coach memory persistence to Supabase
-
-**Phase 3: Memory & History** -- Complete
-
-- Memory snapshot reader (last 5 sessions + top 20 KV entries, ~500 tokens)
-- Server-side memory injection into coach system prompt
-- Offline caching with localStorage fallback and auto-sync on reconnect
-- Session history page (`/history`) with card list sorted by date
-- Auth guard on coach API route
+- Real-time PM5 BLE data (stroke rate, split, watts, distance)
+- Pre-computed cue engine (<500ms) + Claude LLM for novel coaching situations
+- Cartesia Sonic streaming text-to-speech
+- Two-tier priority audio queue (corrections interrupt encouragement)
+- Session memory: last 5 sessions + 20 KV memory entries in every coach prompt
+- Offline session caching with auto-sync on reconnect
+- Session history browsing
 
 ## Tech Stack
 
@@ -95,20 +86,23 @@ src/
       coach/        # Claude streaming proxy (SSE) — 5 coaching intents
       tts/          # Cartesia TTS streaming proxy (SSE)
     checkin/        # Pre-session check-in (energy, time, session suggestion)
+    history/        # Session history (card list sorted by date)
     onboarding/     # Name-only onboarding (D-04)
-    session/        # Main rowing session page + coaching controls
+    session/        # Main rowing session page + coaching controls + debrief
   components/
     ble/            # BleConnectButton (rationale + connect)
     checkin/        # CheckinScreen, TapInputRow
     coaching/       # CoachingIndicator, MidSessionControls
+    history/        # SessionHistoryList (card list)
     metrics/        # MetricDisplay (split large, secondaries)
-    session/        # SessionEndPrompt
+    session/        # SessionEndPrompt, SessionSummaryCard
+    SyncTrigger.tsx # Offline write sync (app load + reconnect)
   hooks/
     useCoachingSession.ts  # Wires StrokeProcessor → CueRouter → AudioQueue
-    useSessionLifecycle.ts # Auto-start/end state machine
+    useSessionLifecycle.ts # Auto-start/end + debrief state machine
   lib/
     ble/            # PM5 constants, parser (TDD), service
-    coaching/       # Types, store, AudioQueue, StrokeProcessor, CueRouter, cue templates, session writer
+    coaching/       # Types, store, AudioQueue, StrokeProcessor, CueRouter, cue templates, session writer, memory snapshot, offline cache
     session/        # Zustand session store
     supabase/       # Client, server, middleware helpers
     wake-lock/      # WakeLockManager
@@ -118,9 +112,11 @@ src/
 
 - **Voice-first, no avatar** -- core hypothesis is the coaching relationship, not visual presence
 - **PWA on Chrome Android** -- Web Bluetooth works here; iOS Safari does not support it
-- **PM5 BLE read-only** -- stroke rate, split, watts, distance. No Logbook API write-back in v1
-- **Minimal onboarding** -- name only upfront, experience/tone/injuries collected progressively
-- **Hybrid coaching cues** -- pre-computed templates (<200ms) for common patterns, LLM for novel situations
+- **Hybrid coaching cues** -- pre-computed templates (<500ms) for common patterns, Claude LLM for novel situations
+- **Tap-only interaction** -- erg noise makes speech recognition unreliable; 3 fixed buttons cover core needs
+- **Fixed-size memory snapshot** -- last 5 sessions + top 20 KV entries (~500 tokens), assembled server-side
+- **Supabase Postgres KV** -- structured session data + key-value coach memory; no vector DB needed at this scale
+- **Offline-first writes** -- localStorage fallback when Supabase is unavailable, auto-sync on reconnect
 
 ## License
 
