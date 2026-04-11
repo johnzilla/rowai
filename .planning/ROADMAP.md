@@ -67,7 +67,14 @@ Plans:
   3. Memory schema uses a fixed-size snapshot so context size stays bounded as session count grows
   4. Session data saved to localStorage when Supabase is unavailable and syncs automatically on reconnect
   5. User can view a list of past sessions sorted by date with distance, time, and average split
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Memory snapshot reader + coach route injection (MEM-01, MEM-02, MEM-03)
+- [ ] 03-02-PLAN.md — Offline caching with localStorage fallback and sync (MEM-04)
+- [ ] 03-03-PLAN.md — Session history UI and check-in screen link (HIST-01, HIST-02)
+
+**UI hint**: yes
 
 ## Progress
 
@@ -78,4 +85,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Foundation | 0/3 | Planned | - |
 | 2. Coaching Loop | 0/TBD | Not started | - |
-| 3. Memory & History | 0/TBD | Not started | - |
+| 3. Memory & History | 0/3 | Not started | - |
