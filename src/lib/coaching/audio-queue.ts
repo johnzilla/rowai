@@ -90,7 +90,7 @@ class AudioQueue {
   enqueue(cue: AudioCue): void {
     if (cue.priority === CuePriority.HIGH) {
       // Interrupt current audio and flush normal queue (D-05)
-      this.currentSource?.stop();
+      try { this.currentSource?.stop(); } catch { /* already ended */ }
       if (this.ctx) {
         this.scheduledEndTime = this.ctx.currentTime;
       }

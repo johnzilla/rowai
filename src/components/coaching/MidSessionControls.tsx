@@ -135,8 +135,8 @@ async function streamSseText(res: Response): Promise<string> {
       if (!payload || payload === '[DONE]') continue;
 
       try {
-        const parsed = JSON.parse(payload) as { type?: string; text?: string };
-        if (parsed.type === 'text_delta' && parsed.text) {
+        const parsed = JSON.parse(payload) as { text?: string; error?: string };
+        if (parsed.text) {
           fullText += parsed.text;
         }
       } catch {

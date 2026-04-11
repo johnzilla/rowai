@@ -55,7 +55,7 @@ export function useCoachingSession(): { isCoachingActive: boolean } {
 
       // Fire session start cue via router (if template exists for 'session_start')
       cueRouter.route({
-        type: 'session_start',
+        type: 'session_start_cue',
         priority: 0, // CuePriority.NORMAL
         context: {
           userName: 'Rower',

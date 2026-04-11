@@ -106,7 +106,7 @@ export function useSessionLifecycle() {
     // Compute session summary from accumulated averages (true session avgs, not sliding window)
     const avgs = strokeProcessor.getAccumulatedAvgs();
     const now = Date.now();
-    const startedAt = sessionStartedAt ?? now;
+    const startedAt = useSessionStore.getState().sessionStartedAt ?? now;
     const durationS = Math.round((now - startedAt) / 1000);
     const totalMeters = useSessionStore.getState().latestReading?.distanceMeters ?? 0;
 
@@ -196,8 +196,8 @@ export function useSessionLifecycle() {
           if (!payload || payload === '[DONE]') continue;
 
           try {
-            const parsed = JSON.parse(payload) as { type?: string; text?: string };
-            if (parsed.type === 'text' && parsed.text) {
+            const parsed = JSON.parse(payload) as { text?: string; error?: string };
+            if (parsed.text) {
               fullDebriefText += parsed.text;
             }
           } catch {

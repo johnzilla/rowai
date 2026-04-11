@@ -28,6 +28,10 @@ export async function POST(request: Request): Promise<Response> {
     ? voiceId
     : defaultVoiceId;
 
+  if (!resolvedVoiceId) {
+    return Response.json({ error: 'CARTESIA_VOICE_ID env var not set' }, { status: 500 });
+  }
+
   const cartesiaResponse = await fetch('https://api.cartesia.ai/tts/sse', {
     method: 'POST',
     headers: {

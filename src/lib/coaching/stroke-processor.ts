@@ -94,10 +94,13 @@ class StrokeProcessor {
     }
 
     // Accumulate for session-wide averages (independent of sliding window)
-    this.totalSplitMs += reading.splitMs;
-    this.totalWatts += reading.watts;
-    this.totalStrokeRate += reading.strokeRate;
-    this.readingCount++;
+    // Skip idle/at-rest readings (strokeState 0) to avoid corrupting averages
+    if (reading.strokeState > 0 && reading.watts > 0) {
+      this.totalSplitMs += reading.splitMs;
+      this.totalWatts += reading.watts;
+      this.totalStrokeRate += reading.strokeRate;
+      this.readingCount++;
+    }
 
     const ctx = this.buildCueContext(reading);
 
