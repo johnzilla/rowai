@@ -176,8 +176,18 @@ export function CheckinScreen() {
 
   return (
     <div className="flex flex-col min-h-screen bg-black text-white px-4 pt-safe-top pb-safe-bottom">
+      {/* History link (D-06) */}
+      <div className="flex justify-end pt-4">
+        <a
+          href="/history"
+          className="text-gray-400 text-sm underline underline-offset-2 decoration-gray-600 hover:text-gray-300 transition-colors"
+        >
+          Session history
+        </a>
+      </div>
+
       {/* Coach greeting at top */}
-      <div className="flex-1 flex flex-col justify-start pt-12 gap-6">
+      <div className="flex-1 flex flex-col justify-start pt-6 gap-6">
         {/* Greeting */}
         <div className="rounded-2xl bg-gray-900 border border-gray-800 p-4 min-h-[80px] flex items-center">
           {isLoadingGreeting ? (
