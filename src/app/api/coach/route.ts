@@ -153,14 +153,16 @@ export async function POST(request: Request): Promise<Response> {
   const supabase = getSupabaseFromRequest(request);
   const { data: { user } } = await supabase.auth.getUser();
 
+  if (!user) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   let memoryBlock = '';
-  if (user) {
-    try {
-      memoryBlock = await buildMemorySnapshot(supabase, user.id);
-    } catch (err) {
-      console.error('[coach] memory snapshot error:', err);
-      // Continue without memory -- graceful degradation
-    }
+  try {
+    memoryBlock = await buildMemorySnapshot(supabase, user.id);
+  } catch (err) {
+    console.error('[coach] memory snapshot error:', err);
+    // Continue without memory -- graceful degradation
   }
 
   const client = new Anthropic({ apiKey });
